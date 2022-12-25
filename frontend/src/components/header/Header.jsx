@@ -14,11 +14,26 @@ import { DateRange } from "react-date-range";
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { format } from "date-fns";
+import {useNavigate} from 'react-router-dom'
+
+
+
+
+
+
+
+
+
+
+//Header
 
 export const Header = ({ type }) => {
-  const [openDate, setOpenDate] = useState(false);
 
-  const [date, setDate] = useState([
+
+  const [openDate, setOpenDate] = useState(false); //calendar open close
+  const [destination, setDestination] = useState("");  //where are you going
+
+  const [date, setDate] = useState([    //calendar data
     {
       startDate: new Date(),
       endDate: new Date(),
@@ -26,13 +41,17 @@ export const Header = ({ type }) => {
     },
   ]);
 
-  const [openOptions, setOpenOptions] = useState(false);
-  const [options, setOptions] = useState({
+  const [openOptions, setOpenOptions] = useState(false);  //open options adults,children,room
+  const [options, setOptions] = useState({                //option
     adults: 1,
     children: 0,
     room: 1,
   });
 
+  const navigate=useNavigate()
+
+
+  //cantidad de adults,children and room SELECCION
   const handleOption = (name, operation) => {
     setOptions(() => {
       return {
@@ -43,10 +62,39 @@ export const Header = ({ type }) => {
     });
   };
 
+
+
+
+  
+
+  //BOTON DEL FORM ENVIA LAS ENTRADAS
+  const handleSearch =()=>{
+     navigate('/hotels',{state:{destination,date,options}})
+  }
+
+
+
+
+
+
+
+
+
+
+
   return (
+
+
+
+
     <div className="header">
+
+
       <div className={type === "list" ?"headerContainer listModel" :"headerContainer"}>
+        
+        {/*icons */}
         <div className="headerList">
+
           <div className="headerListItem active">
             <FontAwesomeIcon icon={faBed} />
             <span>Stays</span>
@@ -68,9 +116,17 @@ export const Header = ({ type }) => {
             <FontAwesomeIcon icon={faTaxi} />
             <span>Airport Taxi</span>
           </div>
-        </div>
+        </div> {/*icons */}
+
+
+        
+
         {type !== "list" && (
           <>
+
+
+
+
             <h1 className="headerTitle">
               Lorem ipsum dolor sit amet consectetur adipisicing
             </h1>
@@ -80,29 +136,44 @@ export const Header = ({ type }) => {
             </p>
             <button className="headerBtn">Sign in /Register</button>
 
+
+
+
+
             {/*header Search */}
+
+
             <div className="headerSearch">
-              {/*Input */}
+
+
+
+              {/* 1.   Where are you going */}
               <div className="headerSearchItem">
                 <FontAwesomeIcon icon={faBed} className="headerIcon" />
                 <input
                   type="text"
-                  placeholder="where are you going"
+                  placeholder="Where are you going"
                   className="headerSearchInput"
+                  onChange={e=>setDestination(e.target.value)}
                 />
-              </div>
-              {/*Calendar */}
+              </div> {/*Where are you going */}
+
+
+              {/* 2. Calendar */}
               <div className="headerSearchItem">
                 <FontAwesomeIcon icon={faCalendarDays} className="headerIcon" />
-                <span
+
+                <span className="headerSearchText"
                   onClick={() => {
                     setOpenDate(!openDate);
                   }}
-                  className="headerSearchText"
                 >
                   {`${format(date[0].startDate, "MM/dd/yyyy")} to
                  ${format(date[0].endDate, "MM/dd/yyyy")}`}
+
                 </span>
+
+
                 {openDate && (
                   <DateRange
                     editableDateInputs={true}
@@ -110,11 +181,17 @@ export const Header = ({ type }) => {
                     moveRangeOnFirstSelection={false}
                     ranges={date}
                     className="date"
+                    minDate={new Date()}
                   />
                 )}
-              </div>
-              {/*Persons */}
+              </div> {/*Calendar */}
+
+
+
+               {/* 3. NUMBER PERSON,CHILDREN AND ROOM */}
               <div className="headerSearchItem">
+                
+                {/* paabrir option */}
                 <FontAwesomeIcon icon={faPerson} className="headerIcon" />
                 <span
                   className="headerSearchText"
@@ -122,10 +199,17 @@ export const Header = ({ type }) => {
                 >
                   {` ${options.adults} adults ${options.children} children ${options.room} room`}
                 </span>
+
+
+               {/*option abierto */}
+
                 {openOptions && (
-                  <div className="options">
-                    <div className="optionItem">
+                  <div className="options"> 
+
+                    {/*ADULT */}
+                    <div className="optionItem"> 
                       <span className="optionText">Adult</span>
+
                       <div className="optionCounter">
                         <button
                           className="optionCounterButton"
@@ -150,6 +234,8 @@ export const Header = ({ type }) => {
                       </div>
                     </div>
 
+
+                    {/*CHILDREN */}
                     <div className="optionItem">
                       <span className="optionText">Children</span>
                       <div className="optionCounter">
@@ -171,6 +257,8 @@ export const Header = ({ type }) => {
                         </button>
                       </div>
                     </div>
+
+                    {/*ROOM */}
                     <div className="optionItem">
                       <span className="optionText">Room</span>
                       <div className="optionCounter">
@@ -196,13 +284,21 @@ export const Header = ({ type }) => {
                         </button>
                       </div>
                     </div>
+
                   </div>
                 )}
-              </div>
-              {/*Button Search */}
+
+              </div> {/*NUMBER PERSON,CHILDREN AND ROOM */}
+
+
+
+              {/* 4. Button Search */}
               <div className="headerSearchItem">
-                <button className="headerBtn">Search</button>
-              </div>
+                <button className="headerBtn" onClick={handleSearch}>Search</button>
+              </div>{/*Button Search */}
+
+
+
             </div>
           </>
         )}
