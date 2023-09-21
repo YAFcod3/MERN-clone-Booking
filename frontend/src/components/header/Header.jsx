@@ -1,23 +1,21 @@
-import "./header.css";
-import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBed,
-  faPlane,
-  faCar,
-  faTaxi,
-  faPerson,
   faCalendarDays,
+  faCar,
+  faPerson,
+  faPlane,
+  faTaxi,
 } from "@fortawesome/free-solid-svg-icons";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "./header.css";
 import { DateRange } from "react-date-range";
+import { useContext, useState } from "react";
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { format } from "date-fns";
-import {useNavigate} from 'react-router-dom'
-
-
-
+import { useNavigate } from "react-router-dom";
+import { SearchContext } from "../../context/SearchContext";
+import { AuthContext } from "../../context/AuthContext";
 
 
 
@@ -29,11 +27,14 @@ import {useNavigate} from 'react-router-dom'
 
 export const Header = ({ type }) => {
 
+  const { user } = useContext(AuthContext);
+  const { dispatch } = useContext(SearchContext);
+
 
   const [openDate, setOpenDate] = useState(false); //calendar open close
   const [destination, setDestination] = useState("");  //where are you going
 
-  const [date, setDate] = useState([    //calendar data
+  const [dates, setDates] = useState([   //calendar data
     {
       startDate: new Date(),
       endDate: new Date(),
@@ -68,11 +69,10 @@ export const Header = ({ type }) => {
   
 
   //BOTON DEL FORM ENVIA LAS ENTRADAS
-  const handleSearch =()=>{
-     navigate('/hotels',{state:{destination,date,options}})
-  }
-
-
+  const handleSearch = () => {
+    dispatch({ type: "NEW_SEARCH", payload: { destination, dates, options } });
+    navigate("/hotels", { state: { destination, dates, options } });
+  };
 
 
 
